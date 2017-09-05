@@ -1,6 +1,9 @@
 /*
  * This class is made because we can't use ints or Integers (pass only by value and immutable respectively)
- */
+ * CSC 345 - Homework 0
+ * Int.java
+ * By: Brent Turner 
+*/
 
 public class Int 
 {
