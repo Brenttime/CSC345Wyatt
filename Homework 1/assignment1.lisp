@@ -7,7 +7,7 @@
 
 (defun fibonacci (n)
   "This will implement the stupid double recursion of Fibonacci numbers"
-  (cond ((eql n 1) 1)
+  (cond ((eql n 1) 0)
 	((eql n 2) 1)
 	((+ (fibonacci (- n 1)) (fibonacci (- n 2))))))
   
@@ -17,13 +17,13 @@
     (if (= current n)
 	(+ oneBehind twoBehind)
 	(fib-aux (+ oneBehind twoBehind) oneBehind (+ 1 current))))
-  (if (< n 3) 1 (fib-aux 1 1 3)))
-  
-		     
-					;Make the functions with 0 as element 1 ask wyatt
+  (if (< n 3) (if (= n 1) 0 1) (fib-aux 1 1 3)))
+
+;;These below functions start the fibonacci sequence at 1 rather than at 0 like above
+
 ;;(defun fibonacci (n)
   ;;"This will implement the stupid double recursion of Fibonacci numbers"
-  ;;(cond ((eql n 1) 0)
+  ;;(cond ((eql n 1) 1)
 ;;	((eql n 2) 1)
 ;;	((+ (fibonacci (- n 1)) (fibonacci (- n 2))))))
   
@@ -31,6 +31,6 @@
   ;;"This will implement the smarter tail recursion of fibonacci  numbers"
   ;;(defun fib-aux (oneBehind twoBehind current)
     ;;(if (= current n)
-;;	(+ oneBehind twoBehind)
-;;	(fib-aux (+ oneBehind twoBehind) oneBehind (+ 1 current))))
-  ;;(if (< n 3) (if (= n 1) 0 1) (fib-aux 1 1 3)))
+	;;(+ oneBehind twoBehind)
+	;;(fib-aux (+ oneBehind twoBehind) oneBehind (+ 1 current))))
+  ;;(if (< n 3) 1 (fib-aux 1 1 3)))
