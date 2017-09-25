@@ -15,9 +15,8 @@
   "This will implement the smarter tail recursion of fibonacci  numbers"
   (defun fibonacci-aux (oneBehind twoBehind current)
     (if (= current n)
-	(+ oneBehind twoBehind)
-	(fib-aux (+ oneBehind twoBehind) oneBehind (+ 1 current))))
-  (if (< n 3) (if (= n 1) 0 1) (fib-aux 1 1 3)))
+	(fibonacci-aux (+ oneBehind twoBehind) oneBehind (- current 1))))
+  (if (< n 3) (if (= n 1) 0 1) (fibonacci-aux 1 1 n)))
 
 ;;These below functions start the fibonacci sequence at 1 rather than at 0 like above
 
