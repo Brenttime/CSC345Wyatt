@@ -13,7 +13,7 @@
   
 (defun fibonacci-TR (n)
   "This will implement the smarter tail recursion of fibonacci  numbers"
-  (defun fib-aux (oneBehind twoBehind current)
+  (defun fibonacci-aux (oneBehind twoBehind current)
     (if (= current n)
 	(+ oneBehind twoBehind)
 	(fib-aux (+ oneBehind twoBehind) oneBehind (+ 1 current))))
