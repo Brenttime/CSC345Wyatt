@@ -2,7 +2,7 @@
   "This function will deep replace the char e1, if it exists in the list, with e2, for all occurrences of e1"
   (cond ((endp L) nil)
 	((equal (first L) e1)(cons e2 (my-replace e1 e2 (rest L))))
-	((if (listp (first L)) (my-replace e1 e2 (first L))))
+	((if (listp (first L)) (cons (my-replace e1 e2 (first L)) (my-replace e1 e2 (rest L)))))
 	(t(cons (first L) (my-replace e1 e2 (rest L))))))
 
 (defun fibonacci (n)
