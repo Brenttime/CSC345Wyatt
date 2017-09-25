@@ -36,14 +36,10 @@
 
 	      ;;finally if the recursion is not done then call the function again, but with the accumulator O(n)=n
 	      ((fibonacci-aux (+ oneBehind twoBehind) oneBehind (- current 1))))))
+    
     ;;call the auxiliary function with the base case of fibonacci to which all numbers are made (0 & 1)
     (fibonacci-aux 1 0 n)))
 
-
-
- ;;(cond ((= n 1) 0)
-;;	((= n 2) 1)
-;;	(t(fibonacci-aux 1 0 n))))
 
 ;;These below functions start the fibonacci sequence at 1 rather than at 0 like above
 
