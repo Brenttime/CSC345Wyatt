@@ -14,10 +14,10 @@
 (defun fibonacci-TR (n)
   "This will implement the smarter tail recursion of fibonacci  numbers"
   (defun fibonacci-aux (oneBehind twoBehind current)
-    (if (= current 4)
+    (if (= current 3)
 	(+ oneBehind twoBehind)
 	(fibonacci-aux (+ oneBehind twoBehind) oneBehind (- current 1))))
-  (if (< n 4) (if (= n 1) 0 1) (fibonacci-aux 1 1 n)))
+  (if (< n 3) (if (= n 1) 0 1) (fibonacci-aux 1 0 n)))
 
 ;;These below functions start the fibonacci sequence at 1 rather than at 0 like above
 
