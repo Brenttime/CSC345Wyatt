@@ -10,7 +10,7 @@
 	;;(deep replace) if list then cons the function, used on the list, with the rest of the current list
 	((listp (first L)) (cons (my-replace e1 e2 (first L)) (my-replace e1 e2 (rest L))))
 	
-	;;if the current element is not equal to e1 then keep it on the list and continue down recurssion (worst case: multi-recurssion)
+	;;if the current element is not equal to e1 then keep it on the list and continue down recursion (worst case: multi-recursion)
 	(t(cons (first L) (my-replace e1 e2 (rest L))))))
 
 (defun fibonacci (n)
