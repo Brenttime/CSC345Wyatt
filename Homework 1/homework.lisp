@@ -1,3 +1,7 @@
+;;Homework1.lisp
+;;By Brent Turner
+;;09/24/17
+
 (defun my-replace (e1 e2 L)
   "This function will deep replace the char e1, if it exists in the list, with e2, for all occurrences of e1"
 
