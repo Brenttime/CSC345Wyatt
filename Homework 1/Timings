@@ -1,3 +1,9 @@
+%%% This file has been annotated. All annotations begin with "%%%"
+%%% TimingBuffer.txt
+%%% By: Brent Turner
+%%% 09/24/17
+%%% Homework1 assignment
+
 %%%Interpreter (Before Compiling)
 
 TAIL REC FIBONACCI 10
