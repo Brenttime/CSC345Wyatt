@@ -1,4 +1,9 @@
 %%% This file has been annotated. All annotations begin with "%%%"
+%%% LISP Homework 1 Buffer.txt
+%%% By: Brent Turner
+%%% Homework 1
+%%% 09/24/17
+
 
 %%%Problem 1 (my-replace)
 %%%All tests come from the Illustrative runs on the assignment sheet
