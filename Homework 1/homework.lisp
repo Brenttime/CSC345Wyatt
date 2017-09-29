@@ -35,8 +35,7 @@
 
 	     ;;account for the base case of 0 & 1, then, when it gets to the end (n = 3), add and evaluate the accumulator
 	(cond ((eql current 1) 0)
-	      ((eql current 2) 1)
-	      ((eql current 3)(+ oneBehind twoBehind))
+	      ((eql current 2)(+ oneBehind twoBehind))
 
 	      ;;finally if the recursion is not done then call the function again, but with the accumulator O(n)=n
 	      ((fibonacci-aux (+ oneBehind twoBehind) oneBehind (- current 1))))))
