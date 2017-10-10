@@ -11,9 +11,6 @@
 ;;actual function
 (defun differentiate (F V)
   (cond ((constant-p F) (make-constant 0)) ;;if F is a constant eval 0
-	((variable-p F) (if (equal (make-variable F) (make-variable V))
-			    (make-constant 1)
-			    (make-constant 0)))
 
 	((sum-p F) (make-sum (differentiate (sum-operand-1 F) V) (differentiate (sum-operand-2 F) V)))
 	
@@ -24,7 +21,10 @@
 			    (differentiate (subtraction-operand-1 F ) V) (differentiate (sum-operand-2 F) V)))
 	((product-p F) (make-product (differentiate (product-operand-1 F) V) (differentiate (sum-operand-2 F) V)))
 	((division-p F) (make-division (differentiate (division-operand-1 F) V) (differentiate (division-operand-2 F) V)))
-	((power-p F) (make-power (differentiate (power-operand-1 F) V) (power-operand-2 F)))))
+	((power-p F) (make-power (differentiate (power-operand-1 F) V) (power-operand-2 F)))
+	((variable-p F) (if (equal (make-variable F) (make-variable V))
+			    (make-constant 1)
+			    (make-constant 0)))))
 
 (defun make-constant (C) C)
 (defun make-variable (V) V)
