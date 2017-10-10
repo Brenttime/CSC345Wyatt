@@ -14,8 +14,12 @@
 	((variable-p F) (if (equal (make-variable F) (make-variable V))
 			    (make-constant 1)
 			    (make-constant 0)))
-	((sum-p F) (make-sum (differentiate (sum-operand-1 F) V) (differentiate (sum-operand-2 F) V))) 
-	((negation-p F) (make-negation (differentiate (negation-operand F) V)))
+
+	((sum-p F) (make-sum (differentiate (sum-operand-1 F) V) (differentiate (sum-operand-2 F) V)))
+	
+;;;	((negation-p F) (make-negation (differentiate F V))) ;;in the case of negation
+	((negation-p F) (make-negation (differentiate (rest F) V)))
+	
         ((subtraction-p F) (make-subtraction
 			    (differentiate (subtraction-operand-1 F ) V) (differentiate (sum-operand-2 F) V)))
 	((product-p F) (make-product (differentiate (product-operand-1 F) V) (differentiate (sum-operand-2 F) V)))
@@ -29,10 +33,14 @@
 (defun constant-p (F)
   (or (numberp F) (member F constant-symbols)))
 
-(defun variable-p (V) (member V variable-symbols)) 
+(defun variable-p (V)
+  (cond ((member V variable-symbols) t)
+	((and (listp V) (variable-p (first V))) (member (first V) variable-symbols))))
+
+ ;;; (member V variable-symbols))
 
 (defun negation-p (F)
-  (and (listp F) (eq (first F) negation-symbol)))
+  (and (listp F) (equal (first F) negation-symbol)))
 
 (defun sum-p (F)
   (and (listp F) (equal (sum-operator F) sum-symbol) (>= (length F) 3)))
@@ -95,9 +103,8 @@
 	(t(list F division-symbol G))))
 
 (defun make-negation (F)
-  (cond ((eq 0 F) 0)
-	((numberp F) (cons negation-symbol F))
-	(t(cons negation-symbol F))))
+  (cond ((numberp F) (- 0 F))
+	(t(list negation-symbol F))))
 
 (defun make-power (F G)
   (cond ((eq F 0) 0)
