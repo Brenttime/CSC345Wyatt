@@ -25,10 +25,7 @@
 	 (make-product (differentiate (product-operand-1 F) V) (differentiate (product-operand-2 F) V)))
 
 	((division-p F)
-	;; (make-division (differentiate (division-operand-1 F) V) (differentiate (division-operand-2 F) V)))
-;;	 (make-division (division-operand-1 F) (division-operand-2 F)))
-	;; (make-product (make-product (power-exponent F) (make-power (power-operand F) (- 1 (power-exponent F))))))
-	 (make-division (division-numerator F) (division-denominator F) (differentiate (division-numerator F) V) (differentiate (division-denominator F) V)))
+      	 (make-division (division-numerator F) (division-denominator F) (differentiate (division-numerator F) V) (differentiate (division-denominator F) V)))
 									 
 	((power-p F)
 	 (make-power (power-operand F) (power-exponent F))) ;; i need to add the (d/dx of operand)
