@@ -22,13 +22,15 @@
 	 (make-subtraction (differentiate (subtraction-operand-1 F ) V) (differentiate (sum-operand-2 F) V)))
 
 	((product-p F)
-	 (make-product (differentiate (product-operand-1 F) V) (differentiate (sum-operand-2 F) V)))
+	 (make-product (differentiate (product-operand-1 F) V) (differentiate (product-operand-2 F) V)))
 
 	((division-p F)
 	 (make-division (differentiate (division-operand-1 F) V) (differentiate (division-operand-2 F) V)))
-
+;;	 (make-division (division-operand-1 F) (division-operand-2 F)))
+	;; (make-product (make-product (power-exponent F) (make-power (power-operand F) (- 1 (power-exponent F))))))
+	
 	((power-p F)
-	 (make-power (differentiate (power-operand-1 F) V) (power-operand-2 F)))
+	 (make-power (power-operand F) (power-exponent F)))
 
 	((variable-p F) (if (equal (make-variable F) (make-variable V))
 			    (make-constant 1)
@@ -90,8 +92,8 @@
 (defun product-operand-2 (F) (third F))
 (defun division-operand-1 (F) (first F))
 (defun division-operand-2 (F) (third F))
-(defun power-operand-1 (F) (first F))
-(defun power-operand-2 (F) (third F))
+(defun power-operand (F) (first F))
+(defun power-exponent (F) (third F))
 
 (defun make-sum (F G)
   (cond ((eq 0 F) G)
@@ -123,8 +125,7 @@
 
 (defun make-power (F G)
   (cond ((eq F 0) 0)
-	((eq G 0) 1)
-	((and (numberp F) (numberp G))
-	 (* F (make-power F (- G 1)))) ;;;subtract 1 from G for reccursion
-	(t(list F power-symbol G))))
+	((eq G 0) 0)
+	((numberp G) (list G (list F power-symbol (1- G))))
+        (t(list G (list F power-symbol (make-subtraction G 1))))))
 
