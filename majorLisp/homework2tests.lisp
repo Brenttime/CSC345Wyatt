@@ -19,25 +19,30 @@
 	 (make-negation (differentiate (rest F) V)))
 
 	((subtraction-p F)
-	 (make-subtraction (differentiate (subtraction-operand-1 F ) V) (differentiate (sum-operand-2 F) V)))
+	 (make-subtraction
+	  (differentiate (subtraction-operand-1 F ) V) (differentiate (sum-operand-2 F) V)))
 
-	((product-p F)
-	 (make-product (product-operand-1 F) (product-operand-2 F) V))
+	((product-p F) (make-sum
+			(make-product
+			 (product-operand-2 F) (differentiate (product-operand-1 F) V))
+			(make-product
+			 (product-operand-1 F) (differentiate (product-operand-2 F) V))))
 
 	((division-p F)
-      	 (make-division (division-numerator F) (division-denominator F) V))
-									 
-	((power-p F)
-	 (make-power (power-operand F) (power-exponent F) V))
+	 (make-division
+	  (make-subtraction
+	   (make-product (division-denominator F) (differentiate (division-numerator F) V))
+	   (make-product (division-numerator F) (differentiate (division-denominator F) V)))
+	  (make-power (division-denominator F) 2)))
 
+	((power-p F)
+	 (make-product (make-product (power-exponent F)
+				      (make-power (power-operand F) (1- (power-exponent F))))
+			(differentiate (power-operand F) V)))
+	
 	((variable-p F) (if (equal (make-variable F) (make-variable V))
 			    (make-constant 1)
 			    (make-constant 0)))))
-
-(defun make-constant (C) C)
-(defun make-variable (V)
-  (cond ((listp V) (list (first V)))
-	(t(list V))))
 
 ;;predicates
 (defun constant-p (F)
@@ -93,6 +98,13 @@
 (defun power-operand (F) (first F))
 (defun power-exponent (F) (third F))
 
+;;make functions
+(defun make-constant (C) C)
+
+(defun make-variable (V)
+  (cond ((listp V) (list (first V)))
+	(t(list V))))
+
 (defun make-sum (F G)
   (cond ((eq 0 F) G)
 	((eq 0 G) F)
@@ -105,33 +117,25 @@
 	((and (numberp F) (numberp G)) (- F G))
 	(t(list F subtraction-symbol G))))
 
-(defun make-product (F G V)
- ;; (cond 
-;;      (t(list (make-sum (make-product G (differentiate F V) V) (make-product F (differentiate G V) V))))))
-   ;; (t
-     (list (list G product-symbol (differentiate F V)) sum-symbol (list F product-symbol (differentiate G V)))))
- ;; )
-
-(defun make-division (F G V)
-  (cond ((eq G 0) nil) ;;account for divide by zero error
+(defun make-product (F G)
+  (cond ((eq 1 G) F)
+	((eq 1 F) G)
+	((eq 0 F) 0)
+	((eq 0 G) 0)
+	((and (numberp F) (numberp G)) (* F G))
+	(t(list F product-symbol G))))
 	
-;;	((numberp V) (/ (make-subtraction (make-product V Du) (make-product U Dv)) (make-product V V)))     
-	;;	(t(list (make-subtraction (make-product V Du) (make-product U Dv)) division-symbol (list V power-symbol 2))))) 
-;;	((and (numberp F) (numberp G) (/ (make-subtraction (make-product G (differentiate F V) V)
-;;					  (make-product F (differentiate G V) V)) (make-product G G V)))
-;;	((and (numberp F) (numberp G) (/ (make-subtraction (* G (differentiate F V))
-;;					 (* F (differentiate G V))) (* G G))))))
-
-	(t(list (list (list G product-symbol (differentiate F V)) subtraction-symbol
-		      (list F product-symbol (differentiate G V))) division-symbol (list G power-symbol 2)))))
-
+(defun make-division (F G)
+  (cond ((eq G 0) nil) ;;account for divide by zero error
+	((and (numberp G) (numberp F)) (/ F G))
+	(t(list F division-symbol G))))
+	
 (defun make-negation (F)
   (cond ((numberp F) (- 0 F))
 	(t(list negation-symbol F))))
 
-(defun make-power (F G V)
+(defun make-power (F G)
   (cond ((eq F 0) 0)
-	((eq G 0) 0)
-	((numberp G) (list G product-symbol (list F power-symbol (1- G)) product-symbol (differentiate F V)))
-        (t(list G product-symbol (list F power-symbol (make-subtraction G 1)) product-symbol (differentiate F V)))))
-
+	((eq G 0) 1)
+	((and (numberp G) (numberp F)) (* F (make-power F (- G 1))))
+	(t(list F power-symbol G))))
