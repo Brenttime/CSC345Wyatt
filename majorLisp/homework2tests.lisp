@@ -22,10 +22,10 @@
 	 (make-subtraction (differentiate (subtraction-operand-1 F ) V) (differentiate (sum-operand-2 F) V)))
 
 	((product-p F)
-	 (make-product (differentiate (product-operand-1 F) V) (differentiate (product-operand-2 F) V)))
+	 (make-product (product-operand-1 F) (product-operand-2 F) V))
 
 	((division-p F)
-      	 (make-division (division-numerator F) (division-denominator F) (differentiate (division-numerator F) V) (differentiate (division-denominator F) V)))
+      	 (make-division (division-numerator F) (division-denominator F) V))
 									 
 	((power-p F)
 	 (make-power (power-operand F) (power-exponent F))) ;; i need to add the (d/dx of operand)
@@ -105,16 +105,24 @@
 	((and (numberp F) (numberp G)) (- F G))
 	(t(list F subtraction-symbol G))))
 
-(defun make-product (F G)
+(defun make-product (F G V)
   (cond ((eq 0 F) 0)
 	((eq 0 G) 0)
-	((and (numberp F) (numberp G)) (* F G))
-	(t(list F product-symbol G))))
+	;;;((and (numberp V) (numberp U)) (* F G))
+	;;((and (numberp F) (numberp G)) (* F G))
+        (t(list (make-sum (list G product-symbol (differentiate F V)) (list F product-symbol (differentiate G V)))))))
 
-(defun make-division (U V Du Dv)
-  (cond ((eq V 0) nil)
-	((numberp V) (/ (make-subtraction (make-product V Du) (make-product U Dv)) (make-product V V)))     
-	(t(list (make-subtraction (make-product V Du) (make-product U Dv)) division-symbol (list V power-symbol 2))))) 
+(defun make-division (F G V)
+  (cond ((eq G 0) nil)
+;;	((numberp V) (/ (make-subtraction (make-product V Du) (make-product U Dv)) (make-product V V)))     
+	;;	(t(list (make-subtraction (make-product V Du) (make-product U Dv)) division-symbol (list V power-symbol 2))))) 
+;;	((and (numberp F) (numberp G) (/ (make-subtraction (make-product G (differentiate F V) V)
+;;					  (make-product F (differentiate G V) V)) (make-product G G V)))
+	((and (numberp F) (numberp G) (/ (make-subtraction (* G (differentiate F V))
+					 (* F (differentiate G V)) (* G G)))))
+	 
+	(t(list (list (list G product-symbol (differentiate F V)) subtraction-symbol
+		      (list F product-symbol (differentiate G V))) division-symbol (list G power-symbol 2)))))
 
 (defun make-negation (F)
   (cond ((numberp F) (- 0 F))
