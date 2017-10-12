@@ -44,35 +44,44 @@
 			    (make-constant 1)
 			    (make-constant 0)))))
 
-;;predicates
+;;;predicates
+
+;;;if constant
 (defun constant-p (F)
   (or (numberp F) (member F constant-symbols)))
 
+;;;if variable
 (defun variable-p (V)
   (cond ((member V variable-symbols) t)
 	((and (listp V) (variable-p (first V)))
 	 (member (first V) variable-symbols))))
 
+;;;if negation
 (defun negation-p (F)
   (and (listp F)
        (equal (first F) negation-symbol)))
 
+;;;if sum
 (defun sum-p (F)
   (and (listp F)
        (equal (sum-operator F) sum-symbol) (>= (length F) 3)))
 
+;;;if subtraction
 (defun subtraction-p (F)
   (and (listp F)
        (equal (subtraction-operator F) subtraction-symbol) (>= (length F) 3)))
 
+;;;if product
 (defun product-p (F)
   (and (listp F)
        (equal (product-operator F) product-symbol) (>= (length F) 3)))
 
+;;;if division
 (defun division-p (F)
   (and (listp F)
        (equal (division-operator F) division-symbol) (>= (length F) 3)))
 
+;;;if power
 (defun power-p (F)
   (and (listp F)
        (equal (power-operator F) power-symbol) (>= (length F) 3)))
@@ -106,22 +115,23 @@
 	(t(list V))))
 
 (defun make-sum (F G)
-  (cond ((eq 0 F) G)
-	((eq 0 G) F)
+  (cond ((eq 0 F) G) ;;X + 0 = X
+	((eq 0 G) F) ;;0 + X = X
 	((and (numberp F) (numberp G)) (+ F G))
 	(t(list F sum-symbol G))))
 	
 (defun make-subtraction (F G)
-  (cond ((eq 0 F) (make-negation G))
-	((eq 0 G) F)
+  (cond ((eq 0 F) (make-negation G)) ;;0 - X = - X
+	((eq 0 G) F) ;;X - 0 = X
+	((eq F G) 0) ;;X - X = 0
 	((and (numberp F) (numberp G)) (- F G))
 	(t(list F subtraction-symbol G))))
 
 (defun make-product (F G)
-  (cond ((eq 1 G) F)
-	((eq 1 F) G)
-	((eq 0 F) 0)
-	((eq 0 G) 0)
+  (cond ((eq 1 G) F) ;; X * 1 = X
+	((eq 1 F) G) ;; 1 * x = x
+	((eq 0 F) 0) ;; 0 * X = 0
+	((eq 0 G) 0) ;; x * 0 = 0
 	((and (numberp F) (numberp G)) (* F G))
 	(t(list F product-symbol G))))
 	
@@ -131,11 +141,12 @@
 	(t(list F division-symbol G))))
 	
 (defun make-negation (F)
-  (cond ((numberp F) (- 0 F))
+  (cond ((numberp F) (- 0 F)) ;;-1 = -1
 	(t(list negation-symbol F))))
 
 (defun make-power (F G)
-  (cond ((eq F 0) 0)
-	((eq G 0) 1)
-	((and (numberp G) (numberp F)) (* F (make-power F (- G 1))))
+  (cond ((eq F 0) 0) ;;0 ** 1 = 0
+	((eq G 0) 1) ;;x ** 0 = 1
+	((and (numberp G) (numberp F))
+	 (* F (make-power F (- G 1)))) ;;multiply F recursively
 	(t(list F power-symbol G))))
