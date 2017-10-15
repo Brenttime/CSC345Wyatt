@@ -1,4 +1,44 @@
-;;constants
+;;;=========================================================================================
+;;; Differentiate Function
+(defun differentiate (F V)
+  (cond ((constant-p F) (make-constant 0)) ;;if F is a constant eval 0
+
+	((sum-p F) ;;if sum
+	 (make-sum (differentiate (sum-operand-1 F) V) (differentiate (sum-operand-2 F) V))) 
+
+	((negation-p F) ;;if negation
+	 (make-negation (differentiate (rest F) V)))
+
+	((subtraction-p F) ;;if difference/subtraction
+	 (make-subtraction
+	  (differentiate (subtraction-operand-1 F ) V) (differentiate (sum-operand-2 F) V)))
+
+	((product-p F)   ;;if product
+	 (make-sum (make-product
+		    (product-operand-2 F) (differentiate (product-operand-1 F) V))
+		   (make-product
+		    (product-operand-1 F) (differentiate (product-operand-2 F) V))))
+
+	((division-p F)  ;;if division
+	 (make-division
+	  (make-subtraction
+	   (make-product (division-denominator F) (differentiate (division-numerator F) V))
+	   (make-product (division-numerator F) (differentiate (division-denominator F) V)))
+	  (make-power (division-denominator F) 2)))
+
+	((power-p F) ;;if power
+	 (make-product (make-product
+			(power-exponent F)
+			(make-power (power-operand F) (1- (power-exponent F))))
+		       (differentiate (power-operand F) V)))
+	
+	((variable-p F) ;;if variable
+	 (if (equal (make-variable F) (make-variable V))
+			    (make-constant 1)
+			    (make-constant 0)))))
+
+;;;============================================================================
+;;; SYMBOLS: Only Used Symbols
 (defconstant constant-symbols '(A B C D E F G H N M))
 (defconstant negation-symbol '-)
 (defconstant variable-symbols '(U V W X Y Z))
@@ -8,43 +48,31 @@
 (defconstant subtraction-symbol '-)
 (defconstant power-symbol '**)
 
-;;actual function
-(defun differentiate (F V)
-  (cond ((constant-p F) (make-constant 0)) ;;if F is a constant eval 0
+;;;=========================================================================================
+;;;SELECTORS -- OPERATORS
+(defun negation-operator (F) (first F))
+(defun sum-operator (F) (second F))
+(defun subtraction-operator (F) (second F))
+(defun product-operator (F) (second F))
+(defun division-operator (F) (second F))
+(defun power-operator (F) (second F))
 
-	((sum-p F)
-	 (make-sum (differentiate (sum-operand-1 F) V) (differentiate (sum-operand-2 F) V)))
+;;; SELECTORS -- OPERANDS
+(defun negation-operand (F) (second F))
+(defun sum-operand-1 (F) (first F)) 
+(defun sum-operand-2 (F) (third F))
+(defun subtraction-operand-1 (F) (first F))
+(defun subtraction-operand-2 (F) (third F))
+(defun product-operand-1 (F) (first F))
+(defun product-operand-2 (F) (third F))
+(defun division-numerator (F) (first F))
+(defun division-denominator (F) (third F))
+(defun power-operand (F) (first F))
+(defun power-exponent (F) (third F))
 
-	((negation-p F)
-	 (make-negation (differentiate (rest F) V)))
 
-	((subtraction-p F)
-	 (make-subtraction
-	  (differentiate (subtraction-operand-1 F ) V) (differentiate (sum-operand-2 F) V)))
-
-	((product-p F) (make-sum
-			(make-product
-			 (product-operand-2 F) (differentiate (product-operand-1 F) V))
-			(make-product
-			 (product-operand-1 F) (differentiate (product-operand-2 F) V))))
-
-	((division-p F)
-	 (make-division
-	  (make-subtraction
-	   (make-product (division-denominator F) (differentiate (division-numerator F) V))
-	   (make-product (division-numerator F) (differentiate (division-denominator F) V)))
-	  (make-power (division-denominator F) 2)))
-
-	((power-p F)
-	 (make-product (make-product (power-exponent F)
-				      (make-power (power-operand F) (1- (power-exponent F))))
-			(differentiate (power-operand F) V)))
-	
-	((variable-p F) (if (equal (make-variable F) (make-variable V))
-			    (make-constant 1)
-			    (make-constant 0)))))
-
-;;;predicates
+;;;=============================================================================
+;;; PREDICATES
 
 ;;;if constant
 (defun constant-p (F)
@@ -86,28 +114,9 @@
   (and (listp F)
        (equal (power-operator F) power-symbol) (>= (length F) 3)))
 
-;;operators
-(defun negation-operator (F) (first F))
-(defun sum-operator (F) (second F))
-(defun subtraction-operator (F) (second F))
-(defun product-operator (F) (second F))
-(defun division-operator (F) (second F))
-(defun power-operator (F) (second F))
+;;;=========================================================================================
+;;; CONSTRUCTORS
 
-;;operands
-(defun negation-operand (F) (second F))
-(defun sum-operand-1 (F) (first F))
-(defun sum-operand-2 (F) (third F))
-(defun subtraction-operand-1 (F) (first F))
-(defun subtraction-operand-2 (F) (third F))
-(defun product-operand-1 (F) (first F))
-(defun product-operand-2 (F) (third F))
-(defun division-numerator (F) (first F))
-(defun division-denominator (F) (third F))
-(defun power-operand (F) (first F))
-(defun power-exponent (F) (third F))
-
-;;make functions
 (defun make-constant (C) C)
 
 (defun make-variable (V)
