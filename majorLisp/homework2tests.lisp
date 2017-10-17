@@ -1,6 +1,11 @@
+;;;===========================================================================
+;;;Brent Turner
+;;;Major Lisp Project
+;;;CSC345 - Dr. Wyatt
 ;;;=========================================================================================
 ;;; Differentiate Function
 (defun differentiate (F V)
+	"This function will differentiate a Function F with respect to a variable V"
   (cond ((constant-p F) (make-constant 0)) ;;if F is a constant eval 0
 
 	((sum-p F) ;;if sum
@@ -92,7 +97,7 @@
 ;;;if sum
 (defun sum-p (F)
   (and (listp F)
-       (equal (sum-operator F) sum-symbol) (>= (length F) 3)))
+       (equal (sum-operator F) sum-symbol)))
 
 ;;;if subtraction
 (defun subtraction-p (F)
