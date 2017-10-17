@@ -132,7 +132,9 @@
 ;;;=========================================================================================
 ;;; CONSTRUCTORS
 
-(defun make-constant (C) C)
+(defun make-constant (C)
+	"Make C a constant"
+	C)
 
 (defun make-variable (V)
 	"make V a variable"
