@@ -55,7 +55,7 @@
 
 ;;;=========================================================================================
 ;;;SELECTORS -- OPERATORS
-(defun negation-operator (F) (first F))
+(defun negation-operator (F) (first F))	
 (defun sum-operator (F) (second F))
 (defun subtraction-operator (F) (second F))
 (defun product-operator (F) (second F))
@@ -63,17 +63,17 @@
 (defun power-operator (F) (second F))
 
 ;;; SELECTORS -- OPERANDS
-(defun negation-operand (F) (second F))
-(defun sum-operand-1 (F) (first F)) 
-(defun sum-operand-2 (F) (third F))
-(defun subtraction-operand-1 (F) (first F))
-(defun subtraction-operand-2 (F) (third F))
-(defun product-operand-1 (F) (first F))
-(defun product-operand-2 (F) (third F))
-(defun division-numerator (F) (first F))
-(defun division-denominator (F) (third F))
-(defun power-operand (F) (first F))
-(defun power-exponent (F) (third F))
+(defun negation-operand (F) (second F))		;;for Negation
+(defun sum-operand-1 (F) (first F)) 		;;for Sum
+(defun sum-operand-2 (F) (third F))		;;for Sum
+(defun subtraction-operand-1 (F) (first F))	;;for Subtraction
+(defun subtraction-operand-2 (F) (third F))	;;for Subtraction
+(defun product-operand-1 (F) (first F))		;;for Product
+(defun product-operand-2 (F) (third F))		;;for Product
+(defun division-numerator (F) (first F))	;;for Division
+(defun division-denominator (F) (third F))	;;for Division
+(defun power-operand (F) (first F))		;;for Power
+(defun power-exponent (F) (third F))		;;for Power
 
 
 ;;;=============================================================================
@@ -81,43 +81,51 @@
 
 ;;;if constant
 (defun constant-p (F)
+	"if the function is a constant"
   (or (numberp F) (member F constant-symbols)))
 
 ;;;if variable
 (defun variable-p (V)
+	"if the function is a variable"
   (cond ((member V variable-symbols) t)
 	((and (listp V) (variable-p (first V)))
 	 (member (first V) variable-symbols))))
 
 ;;;if negation
 (defun negation-p (F)
+	"if the function is a negation problem"
   (and (listp F)
-       (equal (first F) negation-symbol)))
+       (eql (first F) negation-symbol)))
 
 ;;;if sum
 (defun sum-p (F)
+	"if the function is an addition problem"
   (and (listp F)
-       (equal (sum-operator F) sum-symbol)))
+       (eql (sum-operator F) sum-symbol)))
 
 ;;;if subtraction
 (defun subtraction-p (F)
+	"if the function is a subtraction problem"
   (and (listp F)
-       (equal (subtraction-operator F) subtraction-symbol) (>= (length F) 3)))
+       (eql (subtraction-operator F) subtraction-symbol)))
 
 ;;;if product
 (defun product-p (F)
+	"if the function is a product problem"
   (and (listp F)
-       (equal (product-operator F) product-symbol) (>= (length F) 3)))
+       (eql (product-operator F) product-symbol)))
 
 ;;;if division
 (defun division-p (F)
+	"if the function is a power problem"
   (and (listp F)
-       (equal (division-operator F) division-symbol) (>= (length F) 3)))
+       (eql (division-operator F) division-symbol)))
 
 ;;;if power
 (defun power-p (F)
+	"if the function is a power problem"
   (and (listp F)
-       (equal (power-operator F) power-symbol) (>= (length F) 3)))
+       (eql (power-operator F) power-symbol)))
 
 ;;;=========================================================================================
 ;;; CONSTRUCTORS
@@ -125,42 +133,49 @@
 (defun make-constant (C) C)
 
 (defun make-variable (V)
+	"make V a variable"
   (cond ((listp V) (list (first V)))
 	(t(list V))))
 
 (defun make-sum (F G)
-  (cond ((eq 0 F) G) ;;X + 0 = X
-	((eq 0 G) F) ;;0 + X = X
+	"add F & G together as a list or number"
+  (cond ((= 0 F) G) ;;X + 0 = X
+	((= 0 G) F) ;;0 + X = X
 	((and (numberp F) (numberp G)) (+ F G))
 	(t(list F sum-symbol G))))
 	
 (defun make-subtraction (F G)
-  (cond ((eq 0 F) (make-negation G)) ;;0 - X = - X
-	((eq 0 G) F) ;;X - 0 = X
-	((eq F G) 0) ;;X - X = 0
+	"subtract F and G as a list or number"
+  (cond ((= 0 F) (make-negation G)) ;;0 - X = - X
+	((= 0 G) F) ;;X - 0 = X
+	((= F G) 0) ;;X - X = 0
 	((and (numberp F) (numberp G)) (- F G))
 	(t(list F subtraction-symbol G))))
 
 (defun make-product (F G)
-  (cond ((eq 1 G) F) ;; X * 1 = X
-	((eq 1 F) G) ;; 1 * x = x
-	((eq 0 F) 0) ;; 0 * X = 0
-	((eq 0 G) 0) ;; x * 0 = 0
+	"multiply F and G as a list or a number"
+  (cond ((= 1 G) F) ;; X * 1 = X
+	((= 1 F) G) ;; 1 * x = x
+	((= 0 F) 0) ;; 0 * X = 0
+	((= 0 G) 0) ;; x * 0 = 0
 	((and (numberp F) (numberp G)) (* F G))
 	(t(list F product-symbol G))))
 	
 (defun make-division (F G)
-  (cond ((eq G 0) nil) ;;account for divide by zero error
+	"divide F and G as a list or as a number"
+  (cond ((= G 0) nil) ;;account for divide by zero error
 	((and (numberp G) (numberp F)) (/ F G))
 	(t(list F division-symbol G))))
 	
 (defun make-negation (F)
+	"negate F as a number or list"
   (cond ((numberp F) (- 0 F)) ;;-1 = -1
 	(t(list negation-symbol F))))
 
 (defun make-power (F G)
-  (cond ((eq F 0) 0) ;;0 ** 1 = 0
-	((eq G 0) 1) ;;x ** 0 = 1
+	"take the exponent of F^G as a number or a list"
+  (cond ((= F 0) 0) ;;0 ** 1 = 0
+	((= G 0) 1) ;;x ** 0 = 1
 	((and (numberp G) (numberp F))
 	 (* F (make-power F (- G 1)))) ;;multiply F recursively
 	(t(list F power-symbol G))))
