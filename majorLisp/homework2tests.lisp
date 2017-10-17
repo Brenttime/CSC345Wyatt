@@ -153,6 +153,7 @@
   (cond ((= 0 F) (make-negation G)) ;;0 - X = - X
 	((= 0 G) F) ;;X - 0 = X
 	((= F G) 0) ;;X - X = 0
+	((equal F G) 0)
 	((and (numberp F) (numberp G)) (- F G))
 	(t(list F subtraction-symbol G))))
 
