@@ -1,3 +1,12 @@
+%%% -- All Annonations are marked by '%%%'
+%%%=============================================================================
+%%% Brent Turner
+%%% Major Lisp Project
+%%% RUN-ALL-DIFS Buffer
+%%% CSC345 - Dr. Wyatt
+%%% 10/9/17
+%%%=============================================================================
+
 CL-USER> (run-all-diffs 10)
 
 DIFFERENTIATING FUNCTION F1
@@ -33,20 +42,20 @@ VARIABLE: X
 DIFFERENTIATING FUNCTION F7
 FUNCTION: ((- X) + (- X))
 VARIABLE: X
-  RESULT: -2
+  RESULT: -2  
 
 DIFFERENTIATING FUNCTION F8
 FUNCTION: (X / (2 * X))
 VARIABLE: X
-  RESULT: (((2 * X) - (X * 2)) / ((2 * X) ** 2))
+  RESULT: (((2 * X) - (X * 2)) / ((2 * X) ** 2))  %%% 0
 
 DIFFERENTIATING FUNCTION F9
 FUNCTION: ((X * X) * (X * X))
 VARIABLE: X
-  RESULT: (((X * X) * (X + X)) + ((X * X) * (X + X)))
+  RESULT: (((X * X) * (X + X)) + ((X * X) * (X + X)))   %%% 4x^3
 
 DIFFERENTIATING FUNCTION F10
 FUNCTION: (A * (X ** 3))
 VARIABLE: X
-  RESULT: (A * (3 * (X ** 2)))
+  RESULT: (A * (3 * (X ** 2)))  %%% 3AX^2
 

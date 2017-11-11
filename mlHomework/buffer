@@ -1,0 +1,42 @@
+%%% This file is annotated with  "%%%"   
+%%% Brent Turner
+%%% CSC 345  -- ML Homework
+%%% Buffer.txt 	
+						
+%%%---------------------------------------------------------------------------
+%%% Loading All Functions
+
+val flip = fn : 'a list -> 'a list
+val deleteIth = fn : 'a list * int -> 'a list
+val latinize = fn : char list -> char list
+val vowelAtStart = fn : char list -> char list
+val piglatinize = fn : string -> string
+val it = () : unit
+
+%%%---------------------------------------------------------------------------
+%%% Flip Runs %%%
+
+- flip [1,2,3,4,5,6];
+val it = [2,1,4,3,6,5] : int list
+
+- flip [1.0,2.0,3.0,4.0,5.0];
+val it = [2.0,1.0,4.0,3.0,5.0] : real list
+
+%%%---------------------------------------------------------------------------
+%%% DeleteIth Runs %%%%
+
+- deleteIth ([1,2,3,4,5,6],3);
+val it = [1,2,4,5,6] : int list
+
+- deleteIth ([1,2,3,4,5,6],7);
+val it = [1,2,3,4,5,6] : int list
+
+%%%---------------------------------------------------------------------------
+%%% piglatinize runs %%%
+
+- piglatinize "able";
+val it = "ableyay" : string
+
+- piglatinize "stripe";
+val it = "ipestray" : string
+

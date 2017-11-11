@@ -1,3 +1,8 @@
+;;;=============================================================================
+;;;Brent Turner
+;;;Major Lisp Project
+;;; TEST-Functions.lisp
+;;;CSC345 - Dr. Wyatt
 ;;; Sept 27, 2017 - RWW
 
 ;;===================================================================
@@ -25,14 +30,16 @@
   (intern (concatenate 'string "F" (prin1-to-string n))))
 
 (defun make-and-eval-differentiate-expression (n)
-  "Build and evaluate the expression for differentiating F<n> w.r.t. variable x (or y if n=4)"
+  "Build and evaluate the expression for differentiating 
+F<n> w.r.t. variable x (or y if n=4)"
   (format t "DIFFERENTIATING FUNCTION F~a" n)
   (if (= n 4)(format t "               NB: differentiate here w.r.t. y, not x"))
   (terpri)
   (eval `(nice-diff ,(build-symbol n) (if (= ,n 4) 'y 'x))))
 
 (defun nice-diff (F V)
-  (format t "FUNCTION: ~a~%VARIABLE: ~a~%  RESULT: ~A~%~%" F V (differentiate F V)))
+  (format t "FUNCTION: ~a~%VARIABLE: ~a~%  
+	RESULT: ~A~%~%" F V (differentiate F V)))
 
 ;;;===================================================================
 ;;;  THE TEST EXPRESSIONS
@@ -40,7 +47,7 @@
 (defconstant f1  'a)
 (defconstant f2  '(- - x))
 (defconstant f3  '(- - - x))    
-(defconstant f4  '(x / 5))         ;; NB: F4 is to be differentiated wrt y, not x
+(defconstant f4  '(x / 5))       ;; NB: F4 is to be differentiated wrt y, not x
 (defconstant f5  '((x + x) + x))
 (defconstant f6  '(x - (- x)))
 (defconstant f7  '((- x) + (- x)))
