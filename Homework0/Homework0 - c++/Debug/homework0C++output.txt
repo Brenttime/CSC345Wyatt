@@ -1,3 +1,0 @@
-C++
-45
-Press any key to continue . . .
