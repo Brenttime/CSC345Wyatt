@@ -1,0 +1,5 @@
+﻿  Homework0.cpp
+c:\users\serverfiles\turner senior projects\csc 345 - wyatt - pardigms\visual studio\homework0\homework0\homework0.cpp(18): warning C4996: '_sleep': This function or variable has been superceded by newer library or operating system functionality. Consider using Sleep instead. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdlib.h(1271): note: see declaration of '_sleep'
+  Homework0.vcxproj -> C:\Users\ServerFiles\Turner Senior Projects\CSC 345 - Wyatt - Pardigms\Visual Studio\Homework0\Debug\Homework0.exe
+  Homework0.vcxproj -> C:\Users\ServerFiles\Turner Senior Projects\CSC 345 - Wyatt - Pardigms\Visual Studio\Homework0\Debug\Homework0.pdb (Partial PDB)
