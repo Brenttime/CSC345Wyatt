@@ -23,8 +23,7 @@ val t2 = bTree(A,
            bTree(B,bTree(D,empty, empty), bTree(E,empty, empty)),
            bTree(C,bTree(F,empty, empty),bTree(G,empty, empty)));
 
-val t3 = bTree(1.22, 
-           bTree(2.33,empty, empty), bTree(3.44,empty,empty));
+val t3 = bTree(1.22, bTree(2.33,empty,empty), bTree(3.44,empty,empty));
 
 val t4 = bTree("A",
            bTree("B",
@@ -51,13 +50,13 @@ fun Postorder empty = nil
 
 (*----------------------------------------------------------------------------*)
 
-fun dash(num) = print "-\n";
+fun dash(num) = if num = 0 then print"-\n" else (print "   "; dash(num-1));
 
-fun tab(num) = if num = 0 then print "  " else (print "  "; tab(num-1));
+fun printInt n = print(Int.toString n);
 
-fun printInt n = print(Int.toString n)
+fun tab(num) = if num = 0 then print "" else (print "  "; tab(num-1));
 
-fun printReal n = print(Real.toString n)
+fun printReal n = print(Real.toString n);
 
 fun printX A = print "A"
   | printX B = print "B"
@@ -71,14 +70,13 @@ fun printX A = print "A"
 (*----------------------------------------------------------------------------*)
 
 (* displays the head of a node, and tabs the next line the appropriate amount *)
-fun displayNode(a, num, x: 'a -> 'b) = (x a; print "\n"; tab num);
+fun displayNode(a, num, x: 'a -> 'b) = (tab num; x a; print "\n");
 
 
 fun displayTreeIndent(bTree(a,empty,empty), num, x) = (displayNode(a, num+1, x))
-  | displayTreeIndent(bTree(a, left, empty), num, x) = (displayNode(a, num+1, x); displayTreeIndent(left, num+1, x); dash 1)
-  | displayTreeIndent(bTree(a, empty, right), num, x) = (displayNode(a, num+1, x); dash 1; displayTreeIndent(right, num+1, x))
-  | displayTreeIndent(bTree(a, left, right), num, x) = (displayNode(a, num+1, x); displayTreeIndent(left, num, x); displayTreeIndent(right,num-1, x))
-  | displayTreeIndent(_, num, x) = (print "asdf");
+  | displayTreeIndent(bTree(a, left, empty), num, x) = (displayNode(a, num+1, x); displayTreeIndent(left, num+1, x); dash (num+1))
+  | displayTreeIndent(bTree(a, empty, right), num, x) = (displayNode(a, num+1, x); dash(num+1); displayTreeIndent(right, num+1, x))
+  | displayTreeIndent(bTree(a, left, right), num, x) = (displayNode(a, num+1, x); displayTreeIndent(left, num+1, x); displayTreeIndent(right, num+1, x))
 
 
 fun displayTree(bTree(a,left,right), x: 'a -> 'b) = 
