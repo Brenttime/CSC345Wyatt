@@ -5,15 +5,11 @@
 *)
 (*----------------------------------------------------------------------------*)
 
-
-
 datatype X = A|B|C|D|E|F|G|H ;
 
 datatype 'a BT = empty | bTree of 'a * 'a BT * 'a BT;
 
-(*  Binary Trees  *)
-
-val indentLevel = 2;
+(*  Binary Tree Data  *)
 
 val t1 = bTree(1,
            bTree(2,bTree(3,empty, empty), bTree(4,empty, empty)),
@@ -38,23 +34,19 @@ val t4 = bTree("A",
                      empty));
 
 (*----------------------------------------------------------------------------*)
-
+(* Traversal Functions *)
 fun Preorder empty = nil
-  | Preorder (bTree(value, left, right)) = value::Preorder(left)@Preorder(right);
+  | Preorder (bTree(value, left, right)) = [value] @ Preorder(left) @ Preorder(right);
 
 fun Inorder empty = nil
-  | Inorder (bTree(value,left, right)) = (Inorder(left))@[value]@(Inorder(right));
+  | Inorder (bTree(value,left, right)) = (Inorder(left)) @ [value] @ (Inorder(right));
 
 fun Postorder empty = nil 
-  | Postorder (bTree(value, left, right)) = Postorder(left)@Postorder(right)@[value];
+  | Postorder (bTree(value, left, right)) = Postorder(left) @ Postorder(right) @ [value];
 
 (*----------------------------------------------------------------------------*)
-
-fun dash(num) = if num = 0 then print"-\n" else (print "   "; dash(num-1));
-
+(* Print Functions *)
 fun printInt n = print(Int.toString n);
-
-fun tab(num) = if num = 0 then print "" else (print "  "; tab(num-1));
 
 fun printReal n = print(Real.toString n);
 
@@ -68,20 +60,56 @@ fun printX A = print "A"
   | printX H = print "H" ;
 
 (*----------------------------------------------------------------------------*)
+(* Dash & Tab Functions *)
+val indentLevel = 2;
 
-(* displays the head of a node, and tabs the next line the appropriate amount *)
-fun displayNode(a, num, x: 'a -> 'b) = (tab num; x a; print "\n");
+fun tab(tabLevel) = if tabLevel = 0 then print "" else (print " "; tab(tabLevel-1));
+
+fun dash(tabLevel) = (tab(tabLevel * indentLevel); print"-"; print"\n");
+
+(*----------------------------------------------------------------------------*)
+(* Displaying Functions *)
+
+(* Tabs then shows the node *)
+fun displayNode(node, tabLevel, x: 'a -> 'b) = (tab (tabLevel * indentLevel); x node; print "\n");
 
 
-fun displayTreeIndent(bTree(a,empty,empty), num, x) = (displayNode(a, num+1, x))
-  | displayTreeIndent(bTree(a, left, empty), num, x) = (displayNode(a, num+1, x); displayTreeIndent(left, num+1, x); dash (num+1))
-  | displayTreeIndent(bTree(a, empty, right), num, x) = (displayNode(a, num+1, x); dash(num+1); displayTreeIndent(right, num+1, x))
-  | displayTreeIndent(bTree(a, left, right), num, x) = (displayNode(a, num+1, x); displayTreeIndent(left, num+1, x); displayTreeIndent(right, num+1, x))
+fun displayTreeIndent(bTree(root,empty,empty), tabLevel, x) = (displayNode(root, tabLevel, x))
+								  
+  (* Root - tree - empty *)							       
+  | displayTreeIndent(bTree(root, left, empty), tabLevel, x) = (displayNode(root, tabLevel, x);
+							     displayTreeIndent(left, tabLevel+1, x);
+							     dash(tabLevel+1))
+								   
+  (* Root - empty - tree *)								
+  | displayTreeIndent(bTree(root, empty, right), tabLevel, x) = (displayNode(root, tabLevel, x);
+							      dash(tabLevel+1);
+							      displayTreeIndent(right, tabLevel+1, x))
+								    
+  (* Root - tree - tree *)								 
+  | displayTreeIndent(bTree(root, left, right), tabLevel, x) = (displayNode(root, tabLevel, x);
+							     displayTreeIndent(left, tabLevel+1, x);
+							     displayTreeIndent(right, tabLevel+1, x))
+
+  (* Exhuastive Case *)
+  | displayTreeIndent(_, tabLevel, x) = print("");
 
 
-fun displayTree(bTree(a,left,right), x: 'a -> 'b) = 
+fun displayTree(bTree(root,left,right), x: 'a -> 'b) = 
     let 
-    val num = 0
+	val tabLevel = 0
     in
-    (displayNode(a, num, x); displayTreeIndent(left, num, x); displayTreeIndent(right,num, x))
-    end;
+	(displayNode(root, tabLevel, x); displayTreeIndent(left, tabLevel + 1, x); displayTreeIndent(right, tabLevel + 1, x))
+    end
+	
+  (* Exhuastive Case *)	
+  | displayTree(_,x: 'a->'b) = print(""); 
+
+(*----------------------------------------------------------------------------*)
+(* Technical Matters *)
+
+Control.Print.printDepth := 200;
+
+Control.Print.printLength := 200;
+
+Control.polyEqWarn := false;
